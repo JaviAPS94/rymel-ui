@@ -11,10 +11,18 @@ npm install
 npm run dev        # galería en http://localhost:5180
 ```
 
-Con `?demo=largo`, `?demo=apilados` o `?demo=avisos` la galería abre esa demo
-al cargar. La galería (`playground/`) muestra tokens, botones, formularios, etiquetas,
-bloques, tabla, pestañas, avisos, modal y barra de selección, montados con el
-mismo Tailwind v4 que usa el admin.
+La galería (`playground/`) tiene un menú lateral con los componentes por
+categoría (Fundamentos, Acciones, Formularios, Datos, Navegación, Avisos,
+Superposiciones) y un buscador. Cada página muestra la descripción, el
+`import` y un ejemplo de uso listos para copiar, y sus variantes. Cada
+componente tiene su enlace (`#/botones`, `#/modal`…). Corre con el mismo
+Tailwind v4 que usa el admin.
+
+Con `?demo=largo`, `?demo=apilados` o `?demo=avisos` abre directamente esa
+demo (útil para capturas).
+
+Para sumar un componente a la galería, añade su entrada en
+`playground/pages.tsx`.
 
 ## Qué trae
 
