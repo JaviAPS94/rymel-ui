@@ -45,6 +45,33 @@ const hrefOf = (id: string) => (id === HOME ? "#/" : `#/${id}`);
 
 /* Menú lateral -------------------------------------------------------- */
 
+/** Icono de cada categoría: la cabecera del grupo se distingue de sus páginas. */
+const CATEGORY_ICONS: Record<string, string> = {
+  Fundamentos: "M12 3a9 9 0 1 0 0 18c1 0 1.5-.8 1.5-1.6 0-.5-.3-.9-.6-1.2-.3-.4-.5-.8-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.4-9-7.4zM7.5 12.5h.01M10 8h.01M15 8h.01",
+  Acciones: "M9 9l10.5 4.5-4.5 1.5-1.5 4.5zM5 3v4M3 5h4M14 3l-1 2M3 14l2-1",
+  Formularios: "M4 7h16v10H4zM8 12h.01M12 12h4",
+  Datos: "M4 5h16v14H4zM4 10h16M10 10v9",
+  Navegación: "M4 6h16M4 12h10M4 18h16",
+  Avisos: "M6 16V11a6 6 0 1 1 12 0v5l2 2H4zM10 21h4",
+  Superposiciones: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
+};
+
+const CategoryIcon = ({ category }: { category: string }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d={CATEGORY_ICONS[category] ?? "M4 12h16"} />
+  </svg>
+);
+
 const Sidebar = ({ route, onNavigate }: { route: string; onNavigate?: () => void }) => {
   const [query, setQuery] = useState("");
   const term = query.trim().toLowerCase();
@@ -54,8 +81,8 @@ const Sidebar = ({ route, onNavigate }: { route: string; onNavigate?: () => void
 
   const linkClass = (active: boolean) =>
     cx(
-      "relative flex h-10 items-center rounded-[10px] px-3 text-sm no-underline transition-colors",
-      active ? "bg-rymel-tint font-bold text-rymel-blue" : "font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900",
+      "relative flex h-9 items-center rounded-[10px] px-3 text-sm no-underline transition-colors",
+      active ? "bg-rymel-tint font-bold text-rymel-blue" : "font-normal text-gray-600 hover:bg-gray-50 hover:text-gray-900",
     );
 
   return (
@@ -80,8 +107,19 @@ const Sidebar = ({ route, onNavigate }: { route: string; onNavigate?: () => void
         const pages = PAGES.filter((page) => page.category === category && matches(page));
         if (pages.length === 0) return null;
         return (
-          <div key={category} className="flex flex-col gap-0.5">
-            <span className="px-3 pb-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-gray-600">{category}</span>
+          <section key={category} aria-label={category} className="flex flex-col gap-1.5 border-t border-gray-200 pt-4 first-of-type:border-t-0 first-of-type:pt-0">
+            {/* Cabecera del grupo: índigo, con icono y contador; las páginas van
+                debajo, con sangría y una línea que las une a su categoría. */}
+            <h2 className="m-0 flex items-center gap-2.5 px-1 text-[13px] font-extrabold uppercase tracking-[0.06em] text-rymel-blue">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-rymel-blue text-rymel-yellow">
+                <CategoryIcon category={category} />
+              </span>
+              {category}
+              <span className="ml-auto rounded-full bg-gray-100 px-2 py-px text-[11px] font-bold tracking-normal text-gray-600">
+                {pages.length}
+              </span>
+            </h2>
+            <div className="ml-[18px] flex flex-col gap-0.5 border-l border-gray-200 pl-2.5">
             {pages.map((page) => {
               const active = page.id === route;
               return (
@@ -92,12 +130,15 @@ const Sidebar = ({ route, onNavigate }: { route: string; onNavigate?: () => void
                   aria-current={active ? "page" : undefined}
                   className={linkClass(active)}
                 >
-                  {active && <span aria-hidden="true" className="absolute left-0 h-5 w-[3px] rounded-full bg-rymel-blue" />}
+                  {active && (
+                    <span aria-hidden="true" className="absolute -left-[12px] h-6 w-[3px] rounded-full bg-rymel-blue" />
+                  )}
                   {page.title}
                 </a>
               );
             })}
-          </div>
+            </div>
+          </section>
         );
       })}
 
