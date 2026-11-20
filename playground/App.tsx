@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Toaster, toast } from "sonner";
 import {
   Badge,
   Button,
@@ -30,6 +31,7 @@ import {
   Tag,
   TitleCell,
   tokens,
+  toastOptions,
 } from "../src";
 
 /* ------------------------------------------------------------------ */
@@ -130,6 +132,22 @@ export default function App() {
   const [code, setCode] = useState("");
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
+  // ?demo=largo | apilados | avisos abre la demo al cargar (capturas, revisión).
+  const demo = new URLSearchParams(window.location.search).get("demo");
+  const [tallOpen, setTallOpen] = useState(demo === "largo");
+  const [stackOpen, setStackOpen] = useState(demo === "apilados" ? 2 : 0);
+  useEffect(() => {
+    if (demo !== "avisos") return;
+    // Tras montar el <Toaster>, que se suscribe en su propio efecto.
+    const id = setTimeout(() => {
+      // Sin cierre automático, para que se puedan revisar.
+      const duration = Infinity;
+      toast.success("Norma guardada", { description: "NTCA 1.0.0 · Colombia", duration });
+      toast.error("No se pudo guardar", { description: "El código ya existe.", duration });
+      toast("Diseño eliminado", { action: { label: "Deshacer", onClick: () => {} }, duration });
+    }, 300);
+    return () => clearTimeout(id);
+  }, [demo]);
   const [selected, setSelected] = useState<Record<string, boolean>>({ [designs[0].code]: true });
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
@@ -476,9 +494,40 @@ export default function App() {
           </div>
         </Section>
 
-        <Section id="superpuestos" title="Modal y barra de selección">
+        <Section
+          id="superpuestos"
+          title="Modal, avisos y barra de selección"
+          description="Esc cierra solo el modal de arriba; un modal alto se desplaza con el fondo y deja la cabecera fija."
+        >
           <Demo label="Modal">
             <Button onClick={() => setModalOpen(true)}>Abrir modal</Button>
+            <Button variant="secondary" onClick={() => setTallOpen(true)}>
+              Modal largo
+            </Button>
+            <Button variant="secondary" onClick={() => setStackOpen(1)}>
+              Dos modales apilados
+            </Button>
+          </Demo>
+          <Demo label="Avisos (sonner)">
+            <Button variant="secondary" onClick={() => toast.success("Norma guardada", { description: "NTCA 1.0.0 · Colombia" })}>
+              Éxito
+            </Button>
+            <Button variant="secondary" onClick={() => toast.error("No se pudo guardar", { description: "El código ya existe." })}>
+              Error
+            </Button>
+            <Button variant="secondary" onClick={() => toast.warning("Faltan datos", { description: "Material del núcleo sin etiquetar." })}>
+              Advertencia
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                toast("Diseño eliminado", {
+                  action: { label: "Deshacer", onClick: () => toast.info("Restaurado") },
+                })
+              }
+            >
+              Con acción
+            </Button>
           </Demo>
           <SelectionBar
             count={selectedCount}
@@ -523,6 +572,25 @@ export default function App() {
           </Field>
         </div>
       </Modal>
+
+      <Modal open={tallOpen} onClose={() => setTallOpen(false)} title="Vista previa de importación" size="lg">
+        <div className="flex flex-col gap-2">
+          {Array.from({ length: 60 }, (_, i) => (
+            <div key={i} className="rounded-lg bg-gray-50 px-3 py-2 font-mono text-sm">
+              Fila {i + 1} · 1-25-220-120-CV-CT-NTCA-CO-ST
+            </div>
+          ))}
+        </div>
+      </Modal>
+
+      <Modal open={stackOpen >= 1} onClose={() => setStackOpen(0)} title="Menú de plantilla">
+        <Button onClick={() => setStackOpen(2)}>Elegir ítem…</Button>
+      </Modal>
+      <Modal open={stackOpen >= 2} onClose={() => setStackOpen(1)} title="Elegir ítem" size="sm">
+        <p className="m-0 text-sm text-gray-600">Pulsa Esc: se cierra este y el de abajo sigue abierto.</p>
+      </Modal>
+
+      <Toaster position="top-right" toastOptions={toastOptions} />
     </>
   );
 }

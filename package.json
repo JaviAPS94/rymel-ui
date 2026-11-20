@@ -1,6 +1,6 @@
 {
   "name": "@rymel/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sistema de diseño de Rymel: tokens, estilos y componentes React compartidos por el cliente y el admin.",
   "license": "UNLICENSED",
   "private": false,
@@ -35,8 +35,9 @@
     "dev": "node scripts/build-css.mjs --playground && vite",
     "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "verify": "npm run typecheck && npm run build",
-    "prepare": "npm run build"
+    "verify": "npm run typecheck && npm test && npm run build",
+    "prepare": "npm run build",
+    "test": "vitest run"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
@@ -44,14 +45,19 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.17",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "jsdom": "^30.1.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "sonner": "^2.0.8",
     "tailwindcss": "^4.1.17",
     "typescript": "~5.9.3",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.1.12"
   }
 }

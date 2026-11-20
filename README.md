@@ -11,7 +11,8 @@ npm install
 npm run dev        # galería en http://localhost:5180
 ```
 
-La galería (`playground/`) muestra tokens, botones, formularios, etiquetas,
+Con `?demo=largo`, `?demo=apilados` o `?demo=avisos` la galería abre esa demo
+al cargar. La galería (`playground/`) muestra tokens, botones, formularios, etiquetas,
 bloques, tabla, pestañas, avisos, modal y barra de selección, montados con el
 mismo Tailwind v4 que usa el admin.
 
@@ -116,6 +117,30 @@ import { Link } from "wouter";
 </RymelUIProvider>;
 ```
 
+### Avisos (sonner)
+
+El paquete no depende de `sonner`; exporta las opciones con la marca:
+
+```tsx
+import { Toaster } from "sonner";
+import { toastOptions } from "@rymel/ui";
+
+<Toaster position="top-right" toastOptions={toastOptions} />;
+```
+
+### Modales
+
+`Modal` cubre lo que antes resolvía cada app por su cuenta:
+
+- Con varios abiertos, Esc cierra solo el de arriba.
+- Si un control de dentro ya usó Esc (`event.preventDefault()`, p. ej. un
+  autocompletado), el modal no se cierra.
+- Un modal más alto que la pantalla se desplaza con el fondo
+  (`[data-modal-overlay]`) y la cabecera queda fija; el cuerpo no tiene
+  desplazamiento propio, así no recorta desplegables.
+- `dismissable={false}` evita cerrar al pulsar fuera; `showCloseButton={false}`
+  quita la ✕.
+
 ### Iconos
 
 El paquete no impone librería de iconos. Donde un componente recibe `icon`,
@@ -166,7 +191,7 @@ import { Button, Navbar, Page, PageHeader, Card, FilterField, Input, TableCard, 
 ## Publicar una versión
 
 ```bash
-npm run verify               # typecheck + build
+npm run verify               # typecheck + pruebas + build
 npm version minor            # o patch / major
 git push --follow-tags
 ```
