@@ -1,0 +1,78 @@
+/*
+ * Clases del sistema que no son utilidades sueltas. Van con :where() para no
+ * sumar especificidad: cualquier utilidad de Tailwind puesta encima gana.
+ */
+
+/* Trama de puntos de la banda índigo (barra + cabecera de pantalla). */
+:where(.rm-dots) {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.1) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+}
+
+/* Cuerpo de pantalla: sube 72 px sobre la banda índigo de la cabecera. */
+:where(.rm-page) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1280px;
+  margin: -72px auto 0;
+  padding: 0 16px 64px;
+}
+@media (min-width: 640px) {
+  :where(.rm-page) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Tablas de listado. */
+:where(.rm-table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+:where(.rm-table) thead tr {
+  background: var(--rm-gray-50);
+}
+:where(.rm-table) th {
+  padding: 16px;
+  border-bottom: 1px solid var(--rm-gray-200);
+  text-align: left;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rm-gray-600);
+}
+:where(.rm-table) td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #f0eff5;
+  vertical-align: middle;
+}
+:where(.rm-table.rm-table-compact) td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+:where(.rm-table) :is(th, td):first-child {
+  padding-left: 24px;
+}
+:where(.rm-table) :is(th, td):last-child {
+  padding-right: 24px;
+}
+:where(.rm-table) tbody tr:last-child td {
+  border-bottom: 0;
+}
+:where(.rm-table) tbody tr:hover td {
+  background: #f8f7fd;
+}
+:where(.rm-table) tbody tr[aria-selected="true"] td {
+  background: var(--rm-rymel-tint);
+}
+:where(.rm-table) :is(th, td)[data-align="right"] {
+  text-align: right;
+}

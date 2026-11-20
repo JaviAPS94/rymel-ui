@@ -1,0 +1,10 @@
+/*
+ * El primer bloque de una pantalla flota sobre la banda índigo: sombra en
+ * lugar de borde. Esta regla sí lleva especificidad (y en Tailwind v4 queda
+ * fuera de capas) para imponerse al borde que trae la tarjeta.
+ */
+.rm-page > :first-child {
+  position: relative;
+  border-color: transparent;
+  box-shadow: var(--rm-shadow-float);
+}

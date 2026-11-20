@@ -1,0 +1,10 @@
+@import "tailwindcss";
+/* Igual que lo importará el admin (Tailwind v4), pero apuntando a src. */
+@import "./.generated/theme.css";
+
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+}
